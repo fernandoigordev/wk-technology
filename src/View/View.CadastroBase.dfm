@@ -37,8 +37,6 @@ object ViewCadastroBase: TViewCadastroBase
     ActivePage = TabSheetConsulta
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 0
-    ExplicitHeight = 441
     object TabSheetConsulta: TTabSheet
       Caption = 'TabSheetConsulta'
       object Panel3: TPanel
@@ -50,9 +48,6 @@ object ViewCadastroBase: TViewCadastroBase
         Align = alClient
         ShowCaption = False
         TabOrder = 0
-        ExplicitLeft = 6
-        ExplicitTop = 110
-        ExplicitHeight = 301
         object PanelCabecalho: TPanel
           AlignWithMargins = True
           Left = 4
@@ -63,9 +58,6 @@ object ViewCadastroBase: TViewCadastroBase
           BevelOuter = bvNone
           ShowCaption = False
           TabOrder = 0
-          ExplicitLeft = 3
-          ExplicitTop = 30
-          ExplicitWidth = 610
           object Label1: TLabel
             Left = 8
             Top = 11
@@ -104,7 +96,7 @@ object ViewCadastroBase: TViewCadastroBase
               Font.Name = 'Segoe UI'
               Font.Style = []
               ParentFont = False
-              OnClick = SpeedButtonNovoClick
+              OnClick = SpeedButtonFiltrarClick
               ExplicitLeft = -24
               ExplicitTop = 16
             end
@@ -120,10 +112,6 @@ object ViewCadastroBase: TViewCadastroBase
           BevelOuter = bvNone
           ShowCaption = False
           TabOrder = 1
-          ExplicitLeft = 3
-          ExplicitTop = 30
-          ExplicitWidth = 610
-          ExplicitHeight = 378
           object Panel1: TPanel
             AlignWithMargins = True
             Left = 3
@@ -133,7 +121,6 @@ object ViewCadastroBase: TViewCadastroBase
             Align = alTop
             ShowCaption = False
             TabOrder = 0
-            ExplicitWidth = 604
             object PanelNovo: TPanel
               Left = 515
               Top = 1
@@ -145,9 +132,6 @@ object ViewCadastroBase: TViewCadastroBase
               ParentBackground = False
               ShowCaption = False
               TabOrder = 0
-              ExplicitLeft = 444
-              ExplicitTop = 3
-              ExplicitHeight = 27
               object SpeedButtonNovo: TSpeedButton
                 Left = 0
                 Top = 0
@@ -201,10 +185,6 @@ object ViewCadastroBase: TViewCadastroBase
         ParentBackground = False
         ShowCaption = False
         TabOrder = 0
-        ExplicitLeft = 4
-        ExplicitTop = 4
-        ExplicitWidth = 602
-        ExplicitHeight = 358
         object PanelCadastroBotoes: TPanel
           AlignWithMargins = True
           Left = 4
@@ -217,9 +197,6 @@ object ViewCadastroBase: TViewCadastroBase
           ParentBackground = False
           ShowCaption = False
           TabOrder = 0
-          ExplicitLeft = 3
-          ExplicitTop = 375
-          ExplicitWidth = 610
           object PanelBotaoSalvar: TPanel
             AlignWithMargins = True
             Left = 525
@@ -232,7 +209,6 @@ object ViewCadastroBase: TViewCadastroBase
             ParentBackground = False
             ShowCaption = False
             TabOrder = 0
-            ExplicitLeft = 444
             object SpeedButtonSalvar: TSpeedButton
               Left = 0
               Top = 0
@@ -265,7 +241,6 @@ object ViewCadastroBase: TViewCadastroBase
             ParentBackground = False
             ShowCaption = False
             TabOrder = 1
-            ExplicitLeft = 444
             object SpeedButtonCancelar: TSpeedButton
               Left = 0
               Top = 0
@@ -299,10 +274,6 @@ object ViewCadastroBase: TViewCadastroBase
           ParentBackground = False
           ShowCaption = False
           TabOrder = 1
-          ExplicitLeft = 3
-          ExplicitTop = 3
-          ExplicitWidth = 610
-          ExplicitHeight = 405
         end
       end
     end

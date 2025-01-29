@@ -9,15 +9,17 @@ uses
   Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.Mask, Vcl.DBCtrls;
 
 type
+  TValidaPedidoVenda = (vpvTodos, vpvCliente, vpvDataEmissao, vpvItensPedido);
+
   TViewPedidoVenda = class(TViewCadastroBase)
     GroupBoxDadosPedido: TGroupBox;
     DBEdit1: TDBEdit;
     LabelCodigoPedido: TLabel;
     DBEditCodCliente: TDBEdit;
     Label2: TLabel;
-    DBEdit2: TDBEdit;
+    DBEditDsCliente: TDBEdit;
     Label3: TLabel;
-    DBEdit3: TDBEdit;
+    DBEditDataEmissao: TDBEdit;
     GroupBoxItensPedido: TGroupBox;
     PanelTopAddItem: TPanel;
     PanelAdicionarItem: TPanel;
@@ -26,7 +28,24 @@ type
     PanelBottomAddItem: TPanel;
     LabelTotalPedido: TLabel;
     Label4: TLabel;
+    ClientDataSetCadastroNumeroPedido: TIntegerField;
+    ClientDataSetCadastroCodigoCliente: TIntegerField;
+    ClientDataSetCadastroDsCliente: TStringField;
+    ClientDataSetCadastroDataEmissao: TDateField;
+    ClientDataSetCadastroValorTotal: TFloatField;
+    ClientDataSetItens: TClientDataSet;
+    DataSourceItens: TDataSource;
+    ClientDataSetItensId: TIntegerField;
+    ClientDataSetItensNumeroPedido: TIntegerField;
+    ClientDataSetItensCodigoProduto: TIntegerField;
+    ClientDataSetItensQuantidade: TIntegerField;
+    ClientDataSetItensValorUnitario: TFloatField;
+    ClientDataSetItensValorTotal: TFloatField;
+    ClientDataSetItensDsProduto: TStringField;
   private
+    function ValidaCliente: Boolean;
+    function ValidaDataEmissao: Boolean;
+    function ValidaItensPedido: Boolean;
 
   protected
     function GetFilterGrid: String; override;
@@ -35,8 +54,6 @@ type
     procedure PreencheTitulo; override;
     procedure PersistirRegistro; override;
     procedure BuscarRegistros; override;
-    procedure CriarCamposDataSet; override;
-    procedure CriarColunasGrid; override;
   public
 
   end;
@@ -45,6 +62,9 @@ var
   ViewPedidoVenda: TViewPedidoVenda;
 
 implementation
+
+uses
+  System.UITypes;
 
 {$R *.dfm}
 
@@ -56,21 +76,11 @@ begin
 
 end;
 
-procedure TViewPedidoVenda.CriarCamposDataSet;
-begin
-  inherited;
-
-end;
-
-procedure TViewPedidoVenda.CriarColunasGrid;
-begin
-  inherited;
-
-end;
-
 function TViewPedidoVenda.GetFilterGrid: String;
 begin
-
+  Result := EmptyStr;
+  if EditFiltroGrid.Text <> EmptyStr then
+    Result := Concat('Upper(DsCliente) like ', QuotedStr(Concat('%', UpperCase(EditFiltroGrid.Text), '%')));
 end;
 
 procedure TViewPedidoVenda.PersistirRegistro;
@@ -81,12 +91,39 @@ end;
 
 procedure TViewPedidoVenda.PreencheTitulo;
 begin
-  inherited;
-
+  LabelTitulo.Caption := 'Pedido de venda';
 end;
 
 function TViewPedidoVenda.Valida: Boolean;
 begin
+  Result := (ValidaCliente and ValidaDataEmissao and ValidaItensPedido);
+end;
+
+function TViewPedidoVenda.ValidaCliente: Boolean;
+begin
+  Result := True;
+  if DBEditDsCliente.Text = EmptyStr then
+  begin
+    Result := False;
+    MessageDlg('Cliente inválido!', mtWarning, [mbOK], 0);
+    DBEditCodCliente.SetFocus;
+  end;
+end;
+
+function TViewPedidoVenda.ValidaDataEmissao: Boolean;
+begin
+  Result := True;
+  if StrToDateDef(DBEditDataEmissao.Text, 0) = 0 then
+  begin
+    Result := False;
+    MessageDlg('Data de emissão inválida!', mtWarning, [mbOK], 0);
+    DBEditDataEmissao.SetFocus;
+  end;
+end;
+
+function TViewPedidoVenda.ValidaItensPedido: Boolean;
+begin
+  Result := True;
 
 end;
 

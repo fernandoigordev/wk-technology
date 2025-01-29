@@ -44,6 +44,7 @@ type
     procedure SpeedButtonCancelarClick(Sender: TObject);
     procedure SpeedButtonNovoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure SpeedButtonFiltrarClick(Sender: TObject);
   private
     procedure EscondeAbas;
     procedure TrocarAba(ATabSheet: TTabSheet);
@@ -60,8 +61,6 @@ type
     procedure PreencheTitulo;virtual;
     procedure PersistirRegistro; virtual;abstract;
     procedure BuscarRegistros; virtual;abstract;
-    procedure CriarCamposDataSet;virtual;abstract;
-    procedure CriarColunasGrid;virtual;abstract;
   public
     { Public declarations }
   end;
@@ -135,6 +134,7 @@ end;
 procedure TViewCadastroBase.FormCreate(Sender: TObject);
 begin
   EscondeAbas;
+  BuscarRegistros;
   TrocarAba(TabSheetCadastro);
 end;
 
@@ -167,6 +167,11 @@ end;
 procedure TViewCadastroBase.SpeedButtonCancelarClick(Sender: TObject);
 begin
   Cancelar;
+end;
+
+procedure TViewCadastroBase.SpeedButtonFiltrarClick(Sender: TObject);
+begin
+  FiltrarGrid;
 end;
 
 procedure TViewCadastroBase.SpeedButtonNovoClick(Sender: TObject);
