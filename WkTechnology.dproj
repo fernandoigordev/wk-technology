@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <ProjectName Condition="'$(ProjectName)'==''">WkTechnology</ProjectName>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -135,6 +135,16 @@
             <Form>ViewPedidoVenda</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="src\Controller\Controller.PedidoVenda.pas"/>
+        <DCCReference Include="src\Model\PedidoVenda\Model.PedidoVenda.Interfaces.pas"/>
+        <DCCReference Include="src\Model\ItemPedidoVenda\Model.ItemPedidoVenda.Interfaces.pas"/>
+        <DCCReference Include="src\Dto\Dto.PedidoVenda.pas"/>
+        <DCCReference Include="src\Dto\Dto.ItemPedidoVenda.pas"/>
+        <DCCReference Include="src\Model\PedidoVenda\Model.PedidoVenda.pas"/>
+        <DCCReference Include="src\Model\ItemPedidoVenda\Model.ItemPedidoVenda.pas"/>
+        <DCCReference Include="src\Repository\Repository.PedidoVenda.Interfaces.pas"/>
+        <DCCReference Include="src\Repository\Repository.PedidoVenda.MySql.pas"/>
+        <DCCReference Include="src\Model\Conexao\Model.Conexao.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -164,6 +174,18 @@
                 <DeployFile LocalName="exe\WkTechnology.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>WkTechnology.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="exe\WkTechnology.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>WkTechnology.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="exe\WkTechnology.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>WkTechnology.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

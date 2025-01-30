@@ -1,5 +1,6 @@
 inherited ViewPedidoVenda: TViewPedidoVenda
   StyleElements = [seFont, seClient, seBorder]
+  OnClose = FormClose
   TextHeight = 15
   inherited LabelTitulo: TLabel
     StyleElements = [seFont, seClient, seBorder]
@@ -30,17 +31,25 @@ inherited ViewPedidoVenda: TViewPedidoVenda
         inherited PanelContainer: TPanel
           StyleElements = [seFont, seClient, seBorder]
           inherited Panel1: TPanel
+            BevelOuter = bvNone
             StyleElements = [seFont, seClient, seBorder]
             inherited PanelNovo: TPanel
+              Left = 516
+              Top = 0
+              Height = 28
               StyleElements = [seFont, seClient, seBorder]
+              inherited SpeedButtonNovo: TSpeedButton
+                Height = 28
+              end
             end
           end
           inherited DBGridConsulta: TDBGrid
+            BorderStyle = bsNone
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgMultiSelect]
             Columns = <
               item
                 Expanded = False
-                FieldName = 'NumeroPedido'
+                FieldName = 'Numero'
                 Title.Caption = 'N'#250'mero'
                 Title.Font.Charset = DEFAULT_CHARSET
                 Title.Font.Color = clWindowText
@@ -116,9 +125,9 @@ inherited ViewPedidoVenda: TViewPedidoVenda
             object LabelCodigoPedido: TLabel
               Left = 16
               Top = 27
-              Width = 39
+              Width = 44
               Height = 15
-              Caption = 'C'#243'digo'
+              Caption = 'N'#250'mero'
             end
             object Label2: TLabel
               Left = 111
@@ -139,7 +148,7 @@ inherited ViewPedidoVenda: TViewPedidoVenda
               Top = 48
               Width = 86
               Height = 23
-              DataField = 'NumeroPedido'
+              DataField = 'Numero'
               DataSource = DataSourceCadastro
               Enabled = False
               TabOrder = 0
@@ -242,12 +251,11 @@ inherited ViewPedidoVenda: TViewPedidoVenda
               TitleFont.Height = -12
               TitleFont.Name = 'Segoe UI'
               TitleFont.Style = []
-              OnKeyUp = DBGridConsultaKeyUp
               Columns = <
                 item
                   Expanded = False
                   FieldName = 'CodigoProduto'
-                  Title.Caption = 'C'#243'digo'
+                  Title.Caption = 'Cod. Produto'
                   Title.Font.Charset = DEFAULT_CHARSET
                   Title.Font.Color = clWindowText
                   Title.Font.Height = -12
@@ -265,7 +273,7 @@ inherited ViewPedidoVenda: TViewPedidoVenda
                   Title.Font.Height = -12
                   Title.Font.Name = 'Segoe UI'
                   Title.Font.Style = [fsBold]
-                  Width = 260
+                  Width = 246
                   Visible = True
                 end
                 item
@@ -276,6 +284,7 @@ inherited ViewPedidoVenda: TViewPedidoVenda
                   Title.Font.Height = -12
                   Title.Font.Name = 'Segoe UI'
                   Title.Font.Style = [fsBold]
+                  Width = 73
                   Visible = True
                 end
                 item
@@ -364,41 +373,10 @@ inherited ViewPedidoVenda: TViewPedidoVenda
     Top = 288
   end
   inherited ClientDataSetCadastro: TClientDataSet
-    PersistDataPacket.Data = {
-      8A0000009619E0BD0100000018000000050000000000030000008A000C4E756D
-      65726F50656469646F04000100000000000D436F6469676F436C69656E746504
-      00010000000000094473436C69656E7465010049000000010005574944544802
-      000200C8000B44617461456D697373616F04000600000000000A56616C6F7254
-      6F74616C08000400000000000000}
-    Active = True
     Left = 112
     Top = 288
-    object ClientDataSetCadastroNumeroPedido: TIntegerField
-      FieldName = 'NumeroPedido'
-    end
-    object ClientDataSetCadastroCodigoCliente: TIntegerField
-      FieldName = 'CodigoCliente'
-    end
-    object ClientDataSetCadastroDsCliente: TStringField
-      FieldName = 'DsCliente'
-      Size = 200
-    end
-    object ClientDataSetCadastroDataEmissao: TDateField
-      FieldName = 'DataEmissao'
-    end
-    object ClientDataSetCadastroValorTotal: TFloatField
-      FieldName = 'ValorTotal'
-    end
   end
   object ClientDataSetItens: TClientDataSet
-    PersistDataPacket.Data = {
-      AA0000009619E0BD010000001800000007000000000003000000AA0002496404
-      000100000000000C4E756D65726F50656469646F04000100000000000D436F64
-      69676F50726F6475746F040001000000000009447350726F6475746F01004900
-      0000010005574944544802000200C8000A5175616E7469646164650400010000
-      0000000D56616C6F72556E69746172696F08000400000000000A56616C6F7254
-      6F74616C08000400000000000000}
-    Active = True
     Aggregates = <>
     FieldDefs = <
       item
@@ -432,35 +410,13 @@ inherited ViewPedidoVenda: TViewPedidoVenda
       end>
     IndexDefs = <>
     IndexFieldNames = 'NumeroPedido'
-    MasterFields = 'NumeroPedido'
+    MasterFields = 'Numero'
     MasterSource = DataSourceCadastro
     PacketRecords = 0
     Params = <>
     StoreDefs = True
     Left = 104
     Top = 344
-    object ClientDataSetItensId: TIntegerField
-      FieldName = 'Id'
-    end
-    object ClientDataSetItensNumeroPedido: TIntegerField
-      FieldName = 'NumeroPedido'
-    end
-    object ClientDataSetItensCodigoProduto: TIntegerField
-      FieldName = 'CodigoProduto'
-    end
-    object ClientDataSetItensDsProduto: TStringField
-      FieldName = 'DsProduto'
-      Size = 200
-    end
-    object ClientDataSetItensQuantidade: TIntegerField
-      FieldName = 'Quantidade'
-    end
-    object ClientDataSetItensValorUnitario: TFloatField
-      FieldName = 'ValorUnitario'
-    end
-    object ClientDataSetItensValorTotal: TFloatField
-      FieldName = 'ValorTotal'
-    end
   end
   object DataSourceItens: TDataSource
     DataSet = ClientDataSetItens

@@ -61,6 +61,7 @@ type
     procedure PreencheTitulo;virtual;
     procedure PersistirRegistro; virtual;abstract;
     procedure BuscarRegistros; virtual;abstract;
+    procedure PersistirExclusao; virtual;abstract;
   public
     { Public declarations }
   end;
@@ -69,6 +70,9 @@ var
   ViewCadastroBase: TViewCadastroBase;
 
 implementation
+
+uses
+  System.UITypes;
 
 {$R *.dfm}
 
@@ -121,7 +125,11 @@ end;
 
 procedure TViewCadastroBase.Excluir;
 begin
-
+  if MessageDlg('Deseja realmente excluir o registro selecionado?', TMsgDlgType.mtConfirmation, mbYesNo, 0) = mrYes then
+  begin
+    PersistirExclusao;
+    BuscarRegistros;
+  end;
 end;
 
 procedure TViewCadastroBase.FiltrarGrid;
@@ -135,7 +143,7 @@ procedure TViewCadastroBase.FormCreate(Sender: TObject);
 begin
   EscondeAbas;
   BuscarRegistros;
-  TrocarAba(TabSheetCadastro);
+  TrocarAba(TabSheetConsulta);
 end;
 
 procedure TViewCadastroBase.FormShow(Sender: TObject);

@@ -6,11 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, View.CadastroBase, Data.DB,
   Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.StdCtrls,
-  Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.Mask, Vcl.DBCtrls;
+  Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.Mask, Vcl.DBCtrls, Controller.PedidoVenda;
 
 type
-  TValidaPedidoVenda = (vpvTodos, vpvCliente, vpvDataEmissao, vpvItensPedido);
-
   TViewPedidoVenda = class(TViewCadastroBase)
     GroupBoxDadosPedido: TGroupBox;
     DBEdit1: TDBEdit;
@@ -28,21 +26,12 @@ type
     PanelBottomAddItem: TPanel;
     LabelTotalPedido: TLabel;
     Label4: TLabel;
-    ClientDataSetCadastroNumeroPedido: TIntegerField;
-    ClientDataSetCadastroCodigoCliente: TIntegerField;
-    ClientDataSetCadastroDsCliente: TStringField;
-    ClientDataSetCadastroDataEmissao: TDateField;
-    ClientDataSetCadastroValorTotal: TFloatField;
     ClientDataSetItens: TClientDataSet;
     DataSourceItens: TDataSource;
-    ClientDataSetItensId: TIntegerField;
-    ClientDataSetItensNumeroPedido: TIntegerField;
-    ClientDataSetItensCodigoProduto: TIntegerField;
-    ClientDataSetItensQuantidade: TIntegerField;
-    ClientDataSetItensValorUnitario: TFloatField;
-    ClientDataSetItensValorTotal: TFloatField;
-    ClientDataSetItensDsProduto: TStringField;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
+    FControllerPedidoVenda: TControllerPedidoVenda;
     function ValidaCliente: Boolean;
     function ValidaDataEmissao: Boolean;
     function ValidaItensPedido: Boolean;
@@ -54,6 +43,7 @@ type
     procedure PreencheTitulo; override;
     procedure PersistirRegistro; override;
     procedure BuscarRegistros; override;
+    procedure PersistirExclusao; override;
   public
 
   end;
@@ -64,7 +54,8 @@ var
 implementation
 
 uses
-  System.UITypes;
+  System.UITypes,
+  Repository.PedidoVenda.MySql;
 
 {$R *.dfm}
 
@@ -76,11 +67,30 @@ begin
 
 end;
 
+procedure TViewPedidoVenda.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  FControllerPedidoVenda.Free;
+end;
+
+procedure TViewPedidoVenda.FormCreate(Sender: TObject);
+begin
+  inherited;
+  FControllerPedidoVenda := TControllerPedidoVenda.Create(TRepositoryPedidoVendaMySql.Create, ClientDataSetCadastro, ClientDataSetItens);
+  FControllerPedidoVenda.PopularPedidosVenda;
+end;
+
 function TViewPedidoVenda.GetFilterGrid: String;
 begin
   Result := EmptyStr;
   if EditFiltroGrid.Text <> EmptyStr then
     Result := Concat('Upper(DsCliente) like ', QuotedStr(Concat('%', UpperCase(EditFiltroGrid.Text), '%')));
+end;
+
+procedure TViewPedidoVenda.PersistirExclusao;
+begin
+  inherited;
+
 end;
 
 procedure TViewPedidoVenda.PersistirRegistro;
