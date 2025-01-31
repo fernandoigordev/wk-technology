@@ -14,8 +14,14 @@ type
   private
     function GetSqlListaPedido: String;
     function GetSqlExcluirPedidoVenda: String;
+    function GetSqlIncluir: String;
+    function GetSqlAlterar: String;
+
+    function GetProximoNumeroPedido: Integer;
   public
     function GetListaPedido: TObjectList<TDtoPedidoVenda>;
+    procedure Incluir(APedidoVenda: TDtoPedidoVenda);
+    procedure Alterar(APedidoVenda: TDtoPedidoVenda);
     procedure ExcluirPedidoVenda(ANumeroPedido: Integer);
   end;
 
@@ -23,9 +29,43 @@ implementation
 
 uses
   Model.Conexao,
-  Dto.ItemPedidoVenda;
+  Dto.ItemPedidoVenda,
+  Repository.PedidoVendaItem.Interfaces,
+  Repository.PedidoVendaItem.MySql;
 
 { TRepositoryPedidoVendaMySql }
+
+procedure TRepositoryPedidoVendaMySql.Alterar(APedidoVenda: TDtoPedidoVenda);
+var
+  LQuery: TFDQuery;
+  LItemPedidoVenda: TDtoItemPedidoVenda;
+  LRepositoryPedidoVendaItem: IRepositoryPedidoVendaItem;
+begin
+  LRepositoryPedidoVendaItem := TRepositoryPedidoVendaItemMySql.Create;
+  LQuery := TModelConexao.Instance.GetQuery;
+  try
+    try
+      TModelConexao.Instance.Conexao.StartTransaction;
+
+      LQuery.SQL.Text := GetSqlAlterar;
+      LQuery.ParamByName('numero').AsInteger := APedidoVenda.Numero;
+      LQuery.ParamByName('data_emissao').AsDate := APedidoVenda.DataEmissao;
+      LQuery.ParamByName('codigo_cliente').AsInteger := APedidoVenda.CodigoCliente;
+      LQuery.ParamByName('valor_total').AsFloat := APedidoVenda.ValorTotal;
+      LQuery.ExecSQL;
+
+      for LItemPedidoVenda in APedidoVenda.Itens do
+        LRepositoryPedidoVendaItem.Alterar(LItemPedidoVenda);
+
+      TModelConexao.Instance.Conexao.Commit;
+    except
+      TModelConexao.Instance.Conexao.Rollback;
+      raise;
+    end;
+  finally
+    LQuery.Free;
+  end;
+end;
 
 procedure TRepositoryPedidoVendaMySql.ExcluirPedidoVenda(ANumeroPedido: Integer);
 var
@@ -93,9 +133,37 @@ begin
   end;
 end;
 
+function TRepositoryPedidoVendaMySql.GetProximoNumeroPedido: Integer;
+  var
+  LQuery: TFDQuery;
+begin
+  LQuery := TModelConexao.Instance.GetQuery;
+  try
+    LQuery.SQL.Text := 'select (coalesce(max(numero),0) + 1) as proximo_codigo from pedido_venda pv';
+    LQuery.Open;
+    Result := LQuery.FieldByName('proximo_codigo').AsInteger;
+  finally
+    LQuery.Free;
+  end;
+end;
+
+function TRepositoryPedidoVendaMySql.GetSqlAlterar: String;
+begin
+  Result := 'update pedido_venda set data_emissao = :data_emissao, ' +
+            '                        codigo_cliente = :codigo_cliente, ' +
+            '                        valor_total = :valor_total ' +
+            ' where numero = :numero';
+end;
+
 function TRepositoryPedidoVendaMySql.GetSqlExcluirPedidoVenda: String;
 begin
   Result := 'delete from pedido_venda where numero = :numero';
+end;
+
+function TRepositoryPedidoVendaMySql.GetSqlIncluir: String;
+begin
+  Result := 'insert into pedido_venda(numero, data_emissao, codigo_cliente, valor_total) ' +
+            'values(:numero, :data_emissao, :codigo_cliente, :valor_total)';
 end;
 
 function TRepositoryPedidoVendaMySql.GetSqlListaPedido: String;
@@ -111,6 +179,43 @@ begin
             '    join produto p ' +
             '      on p.Codigo = pvi.codigo_produto ' +
             'order by pv.numero ';
+end;
+
+procedure TRepositoryPedidoVendaMySql.Incluir(APedidoVenda: TDtoPedidoVenda);
+var
+  LQuery: TFDQuery;
+  LItemPedidoVenda: TDtoItemPedidoVenda;
+  LRepositoryPedidoVendaItem: IRepositoryPedidoVendaItem;
+  LProximoNumeroPedido: Integer;
+begin
+  LRepositoryPedidoVendaItem := TRepositoryPedidoVendaItemMySql.Create;
+  LQuery := TModelConexao.Instance.GetQuery;
+  try
+    try
+      TModelConexao.Instance.Conexao.StartTransaction;
+
+      LProximoNumeroPedido := GetProximoNumeroPedido;
+      LQuery.SQL.Text := GetSqlIncluir;
+      LQuery.ParamByName('numero').AsInteger := LProximoNumeroPedido;
+      LQuery.ParamByName('data_emissao').AsDate := APedidoVenda.DataEmissao;
+      LQuery.ParamByName('codigo_cliente').AsInteger := APedidoVenda.CodigoCliente;
+      LQuery.ParamByName('valor_total').AsFloat := APedidoVenda.ValorTotal;
+      LQuery.ExecSQL;
+
+      for LItemPedidoVenda in APedidoVenda.Itens do
+      begin
+        LItemPedidoVenda.NumeroPedido := LProximoNumeroPedido;
+        LRepositoryPedidoVendaItem.Incluir(LItemPedidoVenda);
+      end;
+
+      TModelConexao.Instance.Conexao.Commit;
+    except
+      TModelConexao.Instance.Conexao.Rollback;
+      raise;
+    end;
+  finally
+    LQuery.Free;
+  end;
 end;
 
 end.

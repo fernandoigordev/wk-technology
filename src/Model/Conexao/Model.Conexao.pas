@@ -29,8 +29,10 @@ private
   procedure ConfigurarConexao;
 public
   class function Instance: TModelConexao;
-  destructor Destroy;override;
 
+  property Conexao: TFDConnection read FConexao write FConexao;
+
+  destructor Destroy;override;
   function GetQuery: TFDQuery;
 end;
 

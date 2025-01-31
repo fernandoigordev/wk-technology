@@ -26,7 +26,9 @@ uses
   Repository.Produto.MySql in 'src\Repository\Produto\Repository.Produto.MySql.pas',
   Model.Produto.Interfaces in 'src\Model\Produto\Model.Produto.Interfaces.pas',
   Model.Produto in 'src\Model\Produto\Model.Produto.pas',
-  Controller.Produto in 'src\Controller\Controller.Produto.pas';
+  Controller.Produto in 'src\Controller\Controller.Produto.pas',
+  Repository.PedidoVendaItem.Interfaces in 'src\Repository\PedidoVendaItem\Repository.PedidoVendaItem.Interfaces.pas',
+  Repository.PedidoVendaItem.MySql in 'src\Repository\PedidoVendaItem\Repository.PedidoVendaItem.MySql.pas';
 
 {$R *.res}
 

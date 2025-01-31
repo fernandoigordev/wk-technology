@@ -71,35 +71,7 @@ object ViewCadastroBase: TViewCadastroBase
             Width = 177
             Height = 23
             TabOrder = 0
-          end
-          object PanelFiltrar: TPanel
-            Left = 196
-            Top = 31
-            Width = 80
-            Height = 26
-            BevelOuter = bvNone
-            Color = clMedGray
-            ParentBackground = False
-            ShowCaption = False
-            TabOrder = 1
-            object SpeedButtonFiltrar: TSpeedButton
-              Left = 0
-              Top = 0
-              Width = 80
-              Height = 26
-              Align = alClient
-              Caption = 'Filtrar'
-              Flat = True
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWhite
-              Font.Height = -12
-              Font.Name = 'Segoe UI'
-              Font.Style = []
-              ParentFont = False
-              OnClick = SpeedButtonFiltrarClick
-              ExplicitLeft = -24
-              ExplicitTop = 16
-            end
+            OnChange = EditFiltroGridChange
           end
         end
         object PanelContainer: TPanel

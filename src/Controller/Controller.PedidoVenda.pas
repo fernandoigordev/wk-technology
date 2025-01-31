@@ -5,17 +5,19 @@ interface
 uses
   Datasnap.DBClient,
   Model.PedidoVenda.Interfaces,
-  Repository.PedidoVenda.Interfaces;
+  Repository.PedidoVenda.Interfaces,
+  Dto.PedidoVenda;
 
 type
   TControllerPedidoVenda = class
   private
     FCdsPedidoVenda: TClientDataSet;
     FCdsItensPedido: TClientDataSet;
-    FIModelPedidoVenda: IModelPedidoVenda;
+    FModelPedidoVenda: IModelPedidoVenda;
 
     procedure ConfigurarDataSetPedidoVenda;
     procedure ConfigurarDataSetItemPedidoVenda;
+    function GetDtoPedidoVenda: TDtoPedidoVenda;
   public
     constructor Create(ARepository: IRepositoryPedidoVenda; ACdsPedidoVenda, ACdsItensPedido: TClientDataSet);
 
@@ -31,7 +33,6 @@ implementation
 uses
   System.Generics.Collections,
   Data.DB,
-  Dto.PedidoVenda,
   Dto.ItemPedidoVenda,
   Model.PedidoVenda,
   Model.ItemPedidoVenda;
@@ -39,8 +40,15 @@ uses
 { TControllerPedidoVenda }
 
 procedure TControllerPedidoVenda.Alterar;
+var
+  LPedidoVenda: TDtoPedidoVenda;
 begin
-
+  LPedidoVenda := GetDtoPedidoVenda;
+  try
+    FModelPedidoVenda.Alterar(LPedidoVenda);
+  finally
+    LPedidoVenda.Free;
+  end;
 end;
 
 procedure TControllerPedidoVenda.ConfigurarDataSetItemPedidoVenda;
@@ -72,7 +80,7 @@ end;
 constructor TControllerPedidoVenda.Create(ARepository: IRepositoryPedidoVenda;
   ACdsPedidoVenda, ACdsItensPedido: TClientDataSet);
 begin
-  FIModelPedidoVenda := TPedidoVenda.Create(ARepository);
+  FModelPedidoVenda := TPedidoVenda.Create(ARepository);
   FCdsPedidoVenda := ACdsPedidoVenda;
   FCdsItensPedido := ACdsItensPedido;
   ConfigurarDataSetPedidoVenda;
@@ -81,12 +89,55 @@ end;
 
 procedure TControllerPedidoVenda.ExcluirPedidoVenda;
 begin
-  FIModelPedidoVenda.ExcluirPedidoVenda(FCdsPedidoVenda.FieldByName('Numero').AsInteger);
+  FModelPedidoVenda.ExcluirPedidoVenda(FCdsPedidoVenda.FieldByName('Numero').AsInteger);
+end;
+
+function TControllerPedidoVenda.GetDtoPedidoVenda: TDtoPedidoVenda;
+var
+  LItemPedidoVenda: TDtoItemPedidoVenda;
+  LIntdex: Integer;
+begin
+  Result := TDtoPedidoVenda.Create;
+  try
+    if FCdsPedidoVenda.RecordCount > 0 then
+    begin
+      Result.Numero := FCdsPedidoVenda.FieldByName('Numero').AsInteger;
+      Result.CodigoCliente := FCdsPedidoVenda.FieldByName('CodigoCliente').AsInteger;
+      Result.DsCliente := FCdsPedidoVenda.FieldByName('DsCliente').AsString;
+      Result.DataEmissao := FCdsPedidoVenda.FieldByName('DataEmissao').AsDateTime;
+      Result.ValorTotal := FCdsPedidoVenda.FieldByName('ValorTotal').AsFloat;
+
+      FCdsItensPedido.First;
+      while not FCdsItensPedido.Eof do
+      begin
+        LIntdex := Result.Itens.Add(TDtoItemPedidoVenda.Create);
+        LItemPedidoVenda := Result.Itens.Items[LIntdex];
+        LItemPedidoVenda.Codigo := FCdsItensPedido.FieldByName('Codigo').AsInteger;
+        LItemPedidoVenda.NumeroPedido := FCdsItensPedido.FieldByName('NumeroPedido').AsInteger;
+        LItemPedidoVenda.CodigoProduto := FCdsItensPedido.FieldByName('CodigoProduto').AsInteger;
+        LItemPedidoVenda.DsProduto := FCdsItensPedido.FieldByName('DsProduto').AsString;
+        LItemPedidoVenda.Quantidade := FCdsItensPedido.FieldByName('Quantidade').AsInteger;
+        LItemPedidoVenda.ValorUnitario := FCdsItensPedido.FieldByName('ValorUnitario').AsFloat;
+        LItemPedidoVenda.ValorTotal := FCdsItensPedido.FieldByName('ValorTotal').AsFloat;
+        FCdsItensPedido.Next;
+      end;
+    end;
+  except
+    Result.Free;
+    raise;
+  end;
 end;
 
 procedure TControllerPedidoVenda.Incluir;
+var
+  LPedidoVenda: TDtoPedidoVenda;
 begin
-
+  LPedidoVenda := GetDtoPedidoVenda;
+  try
+    FModelPedidoVenda.Incluir(LPedidoVenda);
+  finally
+    LPedidoVenda.Free;
+  end;
 end;
 
 procedure TControllerPedidoVenda.PopularPedidosVenda;
@@ -98,7 +149,7 @@ begin
   FCdsPedidoVenda.EmptyDataSet;
   FCdsItensPedido.EmptyDataSet;
 
-  LListaPedidoVenda := FIModelPedidoVenda.GetLista;
+  LListaPedidoVenda := FModelPedidoVenda.GetLista;
   try
     for LPedidoVenda in LListaPedidoVenda do
     begin
@@ -130,7 +181,7 @@ end;
 
 procedure TControllerPedidoVenda.SalvarPedidoVenda;
 begin
-  FIModelPedidoVenda
+  FModelPedidoVenda
     .Numero(FCdsPedidoVenda.FieldByName('Numero').AsInteger)
     .CodigoCliente(FCdsPedidoVenda.FieldByName('CodigoCliente').AsInteger)
     .DataEmissao(FCdsPedidoVenda.FieldByName('DataEmissao').AsDateTime)
@@ -140,7 +191,7 @@ begin
   FCdsItensPedido.First;
   while not FCdsItensPedido.Eof do
   begin
-    FIModelPedidoVenda.Itens
+    FModelPedidoVenda.Itens
       .Add(
         TItemPedidoVenda.Create
           .Codigo(FCdsItensPedido.FieldByName('Codigo').AsInteger)

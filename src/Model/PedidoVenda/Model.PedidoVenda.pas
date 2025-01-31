@@ -32,6 +32,8 @@ type
     function Itens(AValue: TList<IModelItemPedidoVenda>): IModelPedidoVenda; overload;
 
     function GetLista: TObjectList<TDtoPedidoVenda>;
+    procedure Incluir(APedidoVenda: TDtoPedidoVenda);
+    procedure Alterar(APedidoVenda: TDtoPedidoVenda);
     procedure ExcluirPedidoVenda(ANumeroPedido: Integer);
 
     constructor Create(ARepository: IRepositoryPedidoVenda);
@@ -40,6 +42,11 @@ type
 implementation
 
 { TPedidoVenda }
+
+procedure TPedidoVenda.Alterar(APedidoVenda: TDtoPedidoVenda);
+begin
+  FRepositoryPedidoVenda.Alterar(APedidoVenda);
+end;
 
 function TPedidoVenda.CodigoCliente(AValue: Integer): IModelPedidoVenda;
 begin
@@ -76,6 +83,11 @@ end;
 function TPedidoVenda.GetLista: TObjectList<TDtoPedidoVenda>;
 begin
   Result := FRepositoryPedidoVenda.GetListaPedido;
+end;
+
+procedure TPedidoVenda.Incluir(APedidoVenda: TDtoPedidoVenda);
+begin
+  FRepositoryPedidoVenda.Incluir(APedidoVenda);
 end;
 
 function TPedidoVenda.Itens(

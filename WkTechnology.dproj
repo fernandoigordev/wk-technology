@@ -161,6 +161,8 @@
         <DCCReference Include="src\Model\Produto\Model.Produto.Interfaces.pas"/>
         <DCCReference Include="src\Model\Produto\Model.Produto.pas"/>
         <DCCReference Include="src\Controller\Controller.Produto.pas"/>
+        <DCCReference Include="src\Repository\PedidoVendaItem\Repository.PedidoVendaItem.Interfaces.pas"/>
+        <DCCReference Include="src\Repository\PedidoVendaItem\Repository.PedidoVendaItem.MySql.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

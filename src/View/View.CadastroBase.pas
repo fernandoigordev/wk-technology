@@ -33,8 +33,6 @@ type
     SpeedButtonCancelar: TSpeedButton;
     PanelNovo: TPanel;
     SpeedButtonNovo: TSpeedButton;
-    PanelFiltrar: TPanel;
-    SpeedButtonFiltrar: TSpeedButton;
     procedure ButtonFiltroGridClick(Sender: TObject);
     procedure ButtonNovoClick(Sender: TObject);
     procedure DBGridConsultaKeyUp(Sender: TObject; var Key: Word;
@@ -46,7 +44,7 @@ type
     procedure SpeedButtonCancelarClick(Sender: TObject);
     procedure SpeedButtonNovoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure SpeedButtonFiltrarClick(Sender: TObject);
+    procedure EditFiltroGridChange(Sender: TObject);
   private
     FTipoOperacao: TTipoOperacao;
     procedure EscondeAbas;
@@ -62,6 +60,7 @@ type
     function Valida: Boolean; virtual;abstract;
 
     procedure AfterInserir;virtual;
+    procedure AfterAlterar;virtual;
     procedure PreencheTitulo;virtual;
     procedure PersistirRegistro; virtual;abstract;
     procedure BuscarRegistros; virtual;abstract;
@@ -82,6 +81,11 @@ uses
 
 {$R *.dfm}
 
+procedure TViewCadastroBase.AfterAlterar;
+begin
+
+end;
+
 procedure TViewCadastroBase.AfterInserir;
 begin
 
@@ -92,6 +96,7 @@ begin
   ClientDataSetCadastro.Edit;
   TrocarAba(TabSheetCadastro);
   FTipoOperacao := toAlterar;
+  AfterAlterar;
 end;
 
 procedure TViewCadastroBase.ButtonSalvarClick(Sender: TObject);
@@ -116,8 +121,8 @@ end;
 
 procedure TViewCadastroBase.Cancelar;
 begin
-  BuscarRegistros;
   TrocarAba(TabSheetConsulta);
+  BuscarRegistros;
 end;
 
 procedure TViewCadastroBase.DBGridConsultaKeyUp(Sender: TObject; var Key: Word;
@@ -130,6 +135,11 @@ begin
     else if Key = VK_RETURN then
       Alterar;
   end;
+end;
+
+procedure TViewCadastroBase.EditFiltroGridChange(Sender: TObject);
+begin
+  FiltrarGrid;
 end;
 
 procedure TViewCadastroBase.EscondeAbas;
@@ -183,6 +193,7 @@ procedure TViewCadastroBase.Salvar;
 begin
   if Valida then
   begin
+    ClientDataSetCadastro.Post;
     PersistirRegistro;
     BuscarRegistros;
     TrocarAba(TabSheetConsulta);
@@ -192,11 +203,6 @@ end;
 procedure TViewCadastroBase.SpeedButtonCancelarClick(Sender: TObject);
 begin
   Cancelar;
-end;
-
-procedure TViewCadastroBase.SpeedButtonFiltrarClick(Sender: TObject);
-begin
-  FiltrarGrid;
 end;
 
 procedure TViewCadastroBase.SpeedButtonNovoClick(Sender: TObject);

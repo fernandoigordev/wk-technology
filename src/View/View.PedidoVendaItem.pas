@@ -43,7 +43,8 @@ type
 implementation
 
 uses
-  Repository.Produto.MySql;
+  Repository.Produto.MySql,
+  Dto.Produto;
 
 {$R *.dfm}
 
@@ -58,9 +59,23 @@ begin
 end;
 
 procedure TViewPedidoVendaItem.DBEditCodProdutoExit(Sender: TObject);
+var
+  LDtoProduto: TDtoProduto;
 begin
-  DataSourceItemPedido
-    .DataSet.FieldByName('DsProduto').AsString := FControllerProduto.GetDescricaoProduto(StrToIntDef(DBEditCodProduto.Text, 0));
+  LDtoProduto := FControllerProduto.GetProduto(StrToIntDef(DBEditCodProduto.Text, 0));
+  try
+    DataSourceItemPedido
+      .DataSet.FieldByName('DsProduto').AsString := LDtoProduto.Descricao;
+
+    DataSourceItemPedido
+     .DataSet.FieldByName('ValorUnitario').AsFloat := LDtoProduto.PrecoVenda;
+
+    DataSourceItemPedido
+     .DataSet.FieldByName('Quantidade').AsInteger := 1;
+  finally
+    if Assigned(LDtoProduto) then
+      LDtoProduto.Free;
+  end;
 end;
 
 class function TViewPedidoVendaItem.DigitaItemVenda(
@@ -90,7 +105,12 @@ end;
 procedure TViewPedidoVendaItem.Salvar;
 begin
   if DataSourceItemPedido.DataSet.State in dsEditModes then
+  begin
+    DataSourceItemPedido.DataSet.FieldByName('ValorTotal').AsFloat :=
+      StrToIntDef(DBEditQuantidade.Text, 0) * StrToFloatDef(DBEditVlrUnitario.Text, 0);
+
     DataSourceItemPedido.DataSet.Post;
+  end;
 
   ModalResult := mrOk;
 end;

@@ -4,14 +4,15 @@ interface
 
 uses
   Repository.Produto.Interfaces,
-  Model.Produto.Interfaces;
+  Model.Produto.Interfaces,
+  Dto.Produto;
 
 type
   TControllerProduto = class
   private
     FModelProduto: IModelProduto;
   public
-    function GetDescricaoProduto(ACodigo: Integer): String;
+    function GetProduto(ACodigo: Integer): TDtoProduto;
 
     constructor Create(ARepository: IRepositoryProduto);
   end;
@@ -28,13 +29,21 @@ begin
   FModelProduto := TModelProduto.Create(ARepository);
 end;
 
-function TControllerProduto.GetDescricaoProduto(ACodigo: Integer): String;
+function TControllerProduto.GetProduto(ACodigo: Integer): TDtoProduto;
 begin
-  FModelProduto
-    .Codigo(ACodigo)
-    .PopularProduto;
+  Result := TDtoProduto.Create;
+  try
+    FModelProduto
+      .Codigo(ACodigo)
+      .PopularProduto;
 
-  Result := FModelProduto.Descricao;
+    Result.Codigo := FModelProduto.Codigo;
+    Result.Descricao := FModelProduto.Descricao;
+    Result.PrecoVenda := FModelProduto.PrecoVenda;
+  except
+    Result.Free;
+    raise;
+  end;
 end;
 
 end.

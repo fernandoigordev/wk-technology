@@ -7,27 +7,21 @@ inherited ViewPedidoVenda: TViewPedidoVenda
     StyleElements = [seFont, seClient, seBorder]
   end
   inherited PageControlCadastro: TPageControl
-    ActivePage = TabSheetCadastro
     inherited TabSheetConsulta: TTabSheet
       inherited Panel3: TPanel
         StyleElements = [seFont, seClient, seBorder]
         inherited PanelCabecalho: TPanel
           StyleElements = [seFont, seClient, seBorder]
           inherited Label1: TLabel
-            Width = 37
-            Caption = 'Cliente'
+            Width = 140
+            Caption = 'Filtrar por nome do cliente'
             StyleElements = [seFont, seClient, seBorder]
-            ExplicitWidth = 37
+            ExplicitWidth = 140
           end
           inherited EditFiltroGrid: TEdit
-            Width = 257
+            Width = 361
             StyleElements = [seFont, seClient, seBorder]
-            ExplicitWidth = 257
-          end
-          inherited PanelFiltrar: TPanel
-            Left = 275
-            StyleElements = [seFont, seClient, seBorder]
-            ExplicitLeft = 275
+            ExplicitWidth = 361
           end
         end
         inherited PanelContainer: TPanel

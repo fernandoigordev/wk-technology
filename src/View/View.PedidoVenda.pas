@@ -40,14 +40,18 @@ type
     FControllerCliente: TControllerCliente;
     function ValidaCliente: Boolean;
     function ValidaDataEmissao: Boolean;
+    function ValidaItens: Boolean;
+    function GetTotalPedido: Double;
 
     procedure ExcluirItem;
+    procedure PreencheValorTotal;
 
   protected
     function GetFilterGrid: String; override;
     function Valida: Boolean; override;
 
     procedure AfterInserir;override;
+    procedure AfterAlterar;override;
     procedure PreencheTitulo; override;
     procedure PersistirRegistro; override;
     procedure BuscarRegistros; override;
@@ -71,10 +75,15 @@ uses
 
 { TViewPedidoVenda }
 
+procedure TViewPedidoVenda.AfterAlterar;
+begin
+  LabelTotalPedido.Caption := FormatFloat('0.00', ClientDataSetCadastro.FieldByName('ValorTotal').AsFloat);
+end;
+
 procedure TViewPedidoVenda.AfterInserir;
 begin
-  inherited;
   ClientDataSetCadastro.FieldByName('DataEmissao').AsDateTime := Now;
+  LabelTotalPedido.Caption := FormatFloat('0.00', 0);
 end;
 
 procedure TViewPedidoVenda.BuscarRegistros;
@@ -100,7 +109,8 @@ begin
     else if Key = VK_RETURN then
     begin
       ClientDataSetItens.Edit;
-      TViewPedidoVendaItem.DigitaItemVenda(ClientDataSetItens);
+      if TViewPedidoVendaItem.DigitaItemVenda(ClientDataSetItens) then
+        PreencheValorTotal;
     end;
   end;
 end;
@@ -132,6 +142,17 @@ begin
     Result := Concat('Upper(DsCliente) like ', QuotedStr(Concat('%', UpperCase(EditFiltroGrid.Text), '%')));
 end;
 
+function TViewPedidoVenda.GetTotalPedido: Double;
+begin
+  Result := 0;
+  ClientDataSetItens.First;
+  while not ClientDataSetItens.Eof do
+  begin
+    Result := Result + ClientDataSetItens.FieldByName('ValorTotal').AsFloat;
+    ClientDataSetItens.Next;
+  end;
+end;
+
 procedure TViewPedidoVenda.PersistirExclusao;
 begin
   inherited;
@@ -152,16 +173,26 @@ begin
   LabelTitulo.Caption := 'Pedido de venda';
 end;
 
+procedure TViewPedidoVenda.PreencheValorTotal;
+var
+  LTotalPedido: Double;
+begin
+  LTotalPedido := GetTotalPedido;
+  ClientDataSetCadastro.FieldByName('ValorTotal').AsFloat := LTotalPedido;
+  LabelTotalPedido.Caption := FormatFloat('0.00', LTotalPedido);
+end;
+
 procedure TViewPedidoVenda.SpeedButtonAdicionarItemClick(Sender: TObject);
 begin
   inherited;
   ClientDataSetItens.Append;
-  TViewPedidoVendaItem.DigitaItemVenda(ClientDataSetItens);
+  if TViewPedidoVendaItem.DigitaItemVenda(ClientDataSetItens) then
+    PreencheValorTotal;
 end;
 
 function TViewPedidoVenda.Valida: Boolean;
 begin
-  Result := (ValidaCliente and ValidaDataEmissao);
+  Result := (ValidaCliente and ValidaDataEmissao and ValidaItens);
 end;
 
 function TViewPedidoVenda.ValidaCliente: Boolean;
@@ -186,5 +217,16 @@ begin
   end;
 end;
 
+
+function TViewPedidoVenda.ValidaItens: Boolean;
+begin
+  Result := True;
+  if ClientDataSetItens.RecordCount = 0 then
+  begin
+    Result := False;
+    MessageDlg('O Pedido precisa ter no mínimo 1(um) item!', mtWarning, [mbOK], 0);
+    DBGridItemPedido.SetFocus;
+  end;
+end;
 
 end.
