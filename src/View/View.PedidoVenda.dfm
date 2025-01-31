@@ -1,4 +1,5 @@
 inherited ViewPedidoVenda: TViewPedidoVenda
+  Position = poScreenCenter
   StyleElements = [seFont, seClient, seBorder]
   OnClose = FormClose
   TextHeight = 15
@@ -6,6 +7,7 @@ inherited ViewPedidoVenda: TViewPedidoVenda
     StyleElements = [seFont, seClient, seBorder]
   end
   inherited PageControlCadastro: TPageControl
+    ActivePage = TabSheetCadastro
     inherited TabSheetConsulta: TTabSheet
       inherited Panel3: TPanel
         StyleElements = [seFont, seClient, seBorder]
@@ -38,8 +40,12 @@ inherited ViewPedidoVenda: TViewPedidoVenda
               Top = 0
               Height = 28
               StyleElements = [seFont, seClient, seBorder]
+              ExplicitLeft = 516
+              ExplicitTop = 0
+              ExplicitHeight = 28
               inherited SpeedButtonNovo: TSpeedButton
                 Height = 28
+                ExplicitHeight = 28
               end
             end
           end
@@ -161,6 +167,7 @@ inherited ViewPedidoVenda: TViewPedidoVenda
               DataField = 'CodigoCliente'
               DataSource = DataSourceCadastro
               TabOrder = 1
+              OnExit = DBEditCodClienteExit
             end
             object DBEditDsCliente: TDBEdit
               Left = 175
@@ -229,7 +236,7 @@ inherited ViewPedidoVenda: TViewPedidoVenda
                   Font.Name = 'Segoe UI'
                   Font.Style = []
                   ParentFont = False
-                  OnClick = SpeedButtonSalvarClick
+                  OnClick = SpeedButtonAdicionarItemClick
                   ExplicitLeft = 8
                   ExplicitWidth = 23
                   ExplicitHeight = 22
@@ -251,6 +258,7 @@ inherited ViewPedidoVenda: TViewPedidoVenda
               TitleFont.Height = -12
               TitleFont.Name = 'Segoe UI'
               TitleFont.Style = []
+              OnKeyUp = DBGridItemPedidoKeyUp
               Columns = <
                 item
                   Expanded = False

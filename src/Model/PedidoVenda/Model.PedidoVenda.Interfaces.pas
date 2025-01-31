@@ -23,6 +23,7 @@ type
     function Itens(AValue: TList<IModelItemPedidoVenda>): IModelPedidoVenda; overload;
 
     function GetLista: TObjectList<TDtoPedidoVenda>;
+    procedure ExcluirPedidoVenda(ANumeroPedido: Integer);
   End;
 
 implementation

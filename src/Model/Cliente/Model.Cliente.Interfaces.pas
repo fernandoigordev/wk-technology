@@ -14,6 +14,8 @@ type
     function Nome(AValue: String): IModelCliente; overload;
     function Cidade(AValue: String): IModelCliente; overload;
     function Uf(AValue: String): IModelCliente; overload;
+
+    procedure PopulaCliente;
   end;
 
 implementation

@@ -3,26 +3,43 @@ unit Repository.PedidoVenda.MySql;
 interface
 
 uses
-  Repository.PedidoVenda.Interfaces,
+  FireDAC.stan.Param,
+  FireDAC.Comp.Client,
   System.Generics.Collections,
+  Repository.PedidoVenda.Interfaces,
   Dto.PedidoVenda;
 
 type
   TRepositoryPedidoVendaMySql = class(TInterfacedObject, IRepositoryPedidoVenda)
   private
     function GetSqlListaPedido: String;
+    function GetSqlExcluirPedidoVenda: String;
   public
     function GetListaPedido: TObjectList<TDtoPedidoVenda>;
+    procedure ExcluirPedidoVenda(ANumeroPedido: Integer);
   end;
 
 implementation
 
 uses
   Model.Conexao,
-  FireDAC.Comp.Client,
   Dto.ItemPedidoVenda;
 
 { TRepositoryPedidoVendaMySql }
+
+procedure TRepositoryPedidoVendaMySql.ExcluirPedidoVenda(ANumeroPedido: Integer);
+var
+  LQuery: TFDQuery;
+begin
+  LQuery := TModelConexao.Instance.GetQuery;
+  try
+    LQuery.SQL.Text := GetSqlExcluirPedidoVenda;
+    LQuery.ParamByName('numero').AsInteger := ANumeroPedido;
+    LQuery.ExecSQL;
+  finally
+    LQuery.Free;
+  end;
+end;
 
 function TRepositoryPedidoVendaMySql.GetListaPedido: TObjectList<TDtoPedidoVenda>;
 var
@@ -30,7 +47,6 @@ var
   LPedidoVenda: TDtoPedidoVenda;
   LItemPedidoVenda: TDtoItemPedidoVenda;
   LIntdex: Integer;
-  LNumeroPedidoAux: Integer;
 begin
   Result := TObjectList<TDtoPedidoVenda>.Create;
   try
@@ -40,19 +56,16 @@ begin
       LQuery.Open;
       if LQuery.RecordCount > 0 then
       begin
-        LNumeroPedidoAux := 0;
         LPedidoVenda := nil;
         while not LQuery.Eof do
         begin
-          LNumeroPedidoAux := LQuery.FieldByName('numero_pedido').AsInteger;
-
           if (not Assigned(LPedidoVenda)) or
-             (Assigned(LPedidoVenda) and (LNumeroPedidoAux <> LPedidoVenda.Numero)) then
+             (Assigned(LPedidoVenda) and (LQuery.FieldByName('numero_pedido').AsInteger <> LPedidoVenda.Numero)) then
           begin
             LIntdex := Result.Add(TDtoPedidoVenda.Create);
             LPedidoVenda := Result.Items[LIntdex];
 
-            LPedidoVenda.Numero := LNumeroPedidoAux;
+            LPedidoVenda.Numero := LQuery.FieldByName('numero_pedido').AsInteger;
             LPedidoVenda.CodigoCliente := LQuery.FieldByName('codigo_cliente').AsInteger;
             LPedidoVenda.DsCliente := LQuery.FieldByName('nome_cliente').AsString;
             LPedidoVenda.DataEmissao := LQuery.FieldByName('data_emissao').AsDateTime;
@@ -78,6 +91,11 @@ begin
     Result.Free;
     raise;
   end;
+end;
+
+function TRepositoryPedidoVendaMySql.GetSqlExcluirPedidoVenda: String;
+begin
+  Result := 'delete from pedido_venda where numero = :numero';
 end;
 
 function TRepositoryPedidoVendaMySql.GetSqlListaPedido: String;

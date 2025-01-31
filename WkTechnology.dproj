@@ -142,9 +142,25 @@
         <DCCReference Include="src\Dto\Dto.ItemPedidoVenda.pas"/>
         <DCCReference Include="src\Model\PedidoVenda\Model.PedidoVenda.pas"/>
         <DCCReference Include="src\Model\ItemPedidoVenda\Model.ItemPedidoVenda.pas"/>
-        <DCCReference Include="src\Repository\Repository.PedidoVenda.Interfaces.pas"/>
-        <DCCReference Include="src\Repository\Repository.PedidoVenda.MySql.pas"/>
+        <DCCReference Include="src\Repository\PedidoVenda\Repository.PedidoVenda.Interfaces.pas"/>
+        <DCCReference Include="src\Repository\PedidoVenda\Repository.PedidoVenda.MySql.pas"/>
         <DCCReference Include="src\Model\Conexao\Model.Conexao.pas"/>
+        <DCCReference Include="src\Repository\Cliente\Repository.Cliente.Interfaces.pas"/>
+        <DCCReference Include="src\Repository\Cliente\Repository.Cliente.MySql.pas"/>
+        <DCCReference Include="src\Model\Cliente\Model.Cliente.Interfaces.pas"/>
+        <DCCReference Include="src\Model\Cliente\Model.Cliente.pas"/>
+        <DCCReference Include="src\Dto\Dto.Cliente.pas"/>
+        <DCCReference Include="src\Controller\Controller.Cliente.pas"/>
+        <DCCReference Include="src\View\View.PedidoVendaItem.pas">
+            <Form>ViewPedidoVendaItem</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\Repository\Produto\Repository.Produto.Interfaces.pas"/>
+        <DCCReference Include="src\Dto\Dto.Produto.pas"/>
+        <DCCReference Include="src\Repository\Produto\Repository.Produto.MySql.pas"/>
+        <DCCReference Include="src\Model\Produto\Model.Produto.Interfaces.pas"/>
+        <DCCReference Include="src\Model\Produto\Model.Produto.pas"/>
+        <DCCReference Include="src\Controller\Controller.Produto.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

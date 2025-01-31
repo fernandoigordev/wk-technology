@@ -32,6 +32,7 @@ type
     function Itens(AValue: TList<IModelItemPedidoVenda>): IModelPedidoVenda; overload;
 
     function GetLista: TObjectList<TDtoPedidoVenda>;
+    procedure ExcluirPedidoVenda(ANumeroPedido: Integer);
 
     constructor Create(ARepository: IRepositoryPedidoVenda);
   end;
@@ -42,6 +43,7 @@ implementation
 
 function TPedidoVenda.CodigoCliente(AValue: Integer): IModelPedidoVenda;
 begin
+  Result := Self;
   FCodigoCliente := AValue;
 end;
 
@@ -57,7 +59,13 @@ end;
 
 function TPedidoVenda.DataEmissao(AValue: TDate): IModelPedidoVenda;
 begin
+  Result := Self;
   FDataEmissao := AValue;
+end;
+
+procedure TPedidoVenda.ExcluirPedidoVenda(ANumeroPedido: Integer);
+begin
+  FRepositoryPedidoVenda.ExcluirPedidoVenda(ANumeroPedido);
 end;
 
 function TPedidoVenda.DataEmissao: TDate;
@@ -73,6 +81,7 @@ end;
 function TPedidoVenda.Itens(
   AValue: TList<IModelItemPedidoVenda>): IModelPedidoVenda;
 begin
+  Result := Self;
   FItens := AValue;
 end;
 
@@ -83,6 +92,7 @@ end;
 
 function TPedidoVenda.Numero(AValue: Integer): IModelPedidoVenda;
 begin
+  Result := Self;
   FNumero := AValue;
 end;
 
@@ -98,6 +108,7 @@ end;
 
 function TPedidoVenda.ValorTotal(AValue: Double): IModelPedidoVenda;
 begin
+  Result := Self;
   FValorTotal := AValue;
 end;
 

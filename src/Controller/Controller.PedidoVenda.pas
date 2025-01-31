@@ -21,6 +21,9 @@ type
 
     procedure PopularPedidosVenda;
     procedure SalvarPedidoVenda;
+    procedure ExcluirPedidoVenda;
+    procedure Incluir;
+    procedure Alterar;
   end;
 
 implementation
@@ -34,6 +37,11 @@ uses
   Model.ItemPedidoVenda;
 
 { TControllerPedidoVenda }
+
+procedure TControllerPedidoVenda.Alterar;
+begin
+
+end;
 
 procedure TControllerPedidoVenda.ConfigurarDataSetItemPedidoVenda;
 begin
@@ -69,6 +77,16 @@ begin
   FCdsItensPedido := ACdsItensPedido;
   ConfigurarDataSetPedidoVenda;
   ConfigurarDataSetItemPedidoVenda;
+end;
+
+procedure TControllerPedidoVenda.ExcluirPedidoVenda;
+begin
+  FIModelPedidoVenda.ExcluirPedidoVenda(FCdsPedidoVenda.FieldByName('Numero').AsInteger);
+end;
+
+procedure TControllerPedidoVenda.Incluir;
+begin
+
 end;
 
 procedure TControllerPedidoVenda.PopularPedidosVenda;
@@ -134,9 +152,6 @@ begin
       );
     FCdsItensPedido.Next;
   end;
-
-//  FIModelPedidoVenda.Atualizar;
-//  FIModelPedidoVenda.Inserir;
 end;
 
 end.

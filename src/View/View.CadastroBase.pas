@@ -8,6 +8,8 @@ uses
   Data.DB, Vcl.Grids, Vcl.DBGrids, Datasnap.DBClient, Vcl.Buttons;
 
 type
+  TTipoOperacao = (toIncluir, toAlterar, toExcluir, toPesquisa);
+
   TViewCadastroBase = class(TForm)
     PageControlCadastro: TPageControl;
     TabSheetConsulta: TTabSheet;
@@ -46,6 +48,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure SpeedButtonFiltrarClick(Sender: TObject);
   private
+    FTipoOperacao: TTipoOperacao;
     procedure EscondeAbas;
     procedure TrocarAba(ATabSheet: TTabSheet);
     procedure FiltrarGrid;
@@ -58,10 +61,13 @@ type
     function GetFilterGrid: String; virtual;abstract;
     function Valida: Boolean; virtual;abstract;
 
+    procedure AfterInserir;virtual;
     procedure PreencheTitulo;virtual;
     procedure PersistirRegistro; virtual;abstract;
     procedure BuscarRegistros; virtual;abstract;
     procedure PersistirExclusao; virtual;abstract;
+
+    property TipoOperacao: TTipoOperacao read FTipoOperacao write FTipoOperacao;
   public
     { Public declarations }
   end;
@@ -76,10 +82,16 @@ uses
 
 {$R *.dfm}
 
+procedure TViewCadastroBase.AfterInserir;
+begin
+
+end;
+
 procedure TViewCadastroBase.Alterar;
 begin
   ClientDataSetCadastro.Edit;
   TrocarAba(TabSheetCadastro);
+  FTipoOperacao := toAlterar;
 end;
 
 procedure TViewCadastroBase.ButtonSalvarClick(Sender: TObject);
@@ -104,17 +116,20 @@ end;
 
 procedure TViewCadastroBase.Cancelar;
 begin
-  ClientDataSetCadastro.Cancel;
+  BuscarRegistros;
   TrocarAba(TabSheetConsulta);
 end;
 
 procedure TViewCadastroBase.DBGridConsultaKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if Key = VK_DELETE then
-    Excluir
-  else if Key = VK_RETURN then
-    Alterar;
+  if ClientDataSetCadastro.RecordCount > 0 then
+  begin
+    if Key = VK_DELETE then
+      Excluir
+    else if Key = VK_RETURN then
+      Alterar;
+  end;
 end;
 
 procedure TViewCadastroBase.EscondeAbas;
@@ -155,6 +170,8 @@ procedure TViewCadastroBase.Inserir;
 begin
   TrocarAba(TabSheetCadastro);
   ClientDataSetCadastro.Append;
+  AfterInserir;
+  FTipoOperacao := toIncluir;
 end;
 
 procedure TViewCadastroBase.PreencheTitulo;
