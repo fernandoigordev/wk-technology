@@ -48,7 +48,6 @@ type
   private
     FTipoOperacao: TTipoOperacao;
     procedure EscondeAbas;
-    procedure TrocarAba(ATabSheet: TTabSheet);
     procedure FiltrarGrid;
     procedure Inserir;
     procedure Excluir;
@@ -56,6 +55,7 @@ type
     procedure Salvar;
     procedure Cancelar;
   protected
+    procedure TrocarAba(ATabSheet: TTabSheet);
     function GetFilterGrid: String; virtual;abstract;
     function Valida: Boolean; virtual;abstract;
 

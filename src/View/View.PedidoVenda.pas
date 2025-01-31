@@ -78,12 +78,14 @@ uses
 procedure TViewPedidoVenda.AfterAlterar;
 begin
   LabelTotalPedido.Caption := FormatFloat('0.00', ClientDataSetCadastro.FieldByName('ValorTotal').AsFloat);
+  DBEditCodCliente.Enabled := False;
 end;
 
 procedure TViewPedidoVenda.AfterInserir;
 begin
   ClientDataSetCadastro.FieldByName('DataEmissao').AsDateTime := Now;
   LabelTotalPedido.Caption := FormatFloat('0.00', 0);
+  DBEditCodCliente.Enabled := True;
 end;
 
 procedure TViewPedidoVenda.BuscarRegistros;
@@ -102,7 +104,7 @@ procedure TViewPedidoVenda.DBGridItemPedidoKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   inherited;
-  if ClientDataSetCadastro.RecordCount > 0 then
+  if ClientDataSetItens.RecordCount > 0 then
   begin
     if Key = VK_DELETE then
       ExcluirItem
@@ -117,7 +119,18 @@ end;
 
 procedure TViewPedidoVenda.ExcluirItem;
 begin
+  if ClientDataSetItens.RecordCount = 1 then
+  begin
+    MessageDlg('O Pedido contém apenas um item, para essa operação exclua o pedido na tela de consulta de pedidos', TMsgDlgType.mtWarning, [mbOK], 0);
+    Exit;
+  end;
 
+  if MessageDlg('Deseja realmente excluir o item selecionado?', TMsgDlgType.mtConfirmation, mbYesNo, 0) = mrYes then
+  begin
+    FControllerPedidoVenda.ExcluirItemPedido(ClientDataSetItens.FieldByName('codigo').AsInteger);
+    TrocarAba(TabSheetConsulta);
+    BuscarRegistros;
+  end;
 end;
 
 procedure TViewPedidoVenda.FormClose(Sender: TObject; var Action: TCloseAction);

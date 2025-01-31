@@ -6,7 +6,7 @@ uses
   Model.ItemPedidoVenda.Interfaces;
 
 type
-  TItemPedidoVenda = class(TInterfacedObject, IModelItemPedidoVenda)
+  TModelItemPedidoVenda = class(TInterfacedObject, IModelItemPedidoVenda)
   private
     FCodigo: Integer;
     FNumeroPedido: Integer;
@@ -32,64 +32,64 @@ type
 
 implementation
 
-{ TItemPedidoVenda }
+{ TModelItemPedidoVenda }
 
-function TItemPedidoVenda.Codigo: Integer;
+function TModelItemPedidoVenda.Codigo: Integer;
 begin
   Result := FCodigo;
 end;
 
-function TItemPedidoVenda.Codigo(AValue: Integer): IModelItemPedidoVenda;
+function TModelItemPedidoVenda.Codigo(AValue: Integer): IModelItemPedidoVenda;
 begin
   FCodigo := AValue;
 end;
 
-function TItemPedidoVenda.CodigoProduto(AValue: Integer): IModelItemPedidoVenda;
+function TModelItemPedidoVenda.CodigoProduto(AValue: Integer): IModelItemPedidoVenda;
 begin
   FCodigoProduto := AValue;
 end;
 
-function TItemPedidoVenda.CodigoProduto: Integer;
+function TModelItemPedidoVenda.CodigoProduto: Integer;
 begin
   Result := FCodigoProduto;
 end;
 
-function TItemPedidoVenda.NumeroPedido(AValue: Integer): IModelItemPedidoVenda;
+function TModelItemPedidoVenda.NumeroPedido(AValue: Integer): IModelItemPedidoVenda;
 begin
   FNumeroPedido := AValue;
 end;
 
-function TItemPedidoVenda.NumeroPedido: Integer;
+function TModelItemPedidoVenda.NumeroPedido: Integer;
 begin
   Result := FNumeroPedido;
 end;
 
-function TItemPedidoVenda.Quantidade(AValue: Integer): IModelItemPedidoVenda;
+function TModelItemPedidoVenda.Quantidade(AValue: Integer): IModelItemPedidoVenda;
 begin
   FQuantidade := AValue;
 end;
 
-function TItemPedidoVenda.Quantidade: Integer;
+function TModelItemPedidoVenda.Quantidade: Integer;
 begin
   Result := FQuantidade;
 end;
 
-function TItemPedidoVenda.ValorTotal: Double;
+function TModelItemPedidoVenda.ValorTotal: Double;
 begin
   Result := FValorTotal;
 end;
 
-function TItemPedidoVenda.ValorTotal(AValue: Double): IModelItemPedidoVenda;
+function TModelItemPedidoVenda.ValorTotal(AValue: Double): IModelItemPedidoVenda;
 begin
   FValorTotal := AValue;
 end;
 
-function TItemPedidoVenda.ValorUnitario: Double;
+function TModelItemPedidoVenda.ValorUnitario: Double;
 begin
   Result := FValorUnitario;
 end;
 
-function TItemPedidoVenda.ValorUnitario(AValue: Double): IModelItemPedidoVenda;
+function TModelItemPedidoVenda.ValorUnitario(AValue: Double): IModelItemPedidoVenda;
 begin
   FValorUnitario := AValue;
 end;

@@ -26,6 +26,7 @@ type
     procedure ExcluirPedidoVenda;
     procedure Incluir;
     procedure Alterar;
+    procedure ExcluirItemPedido(ACodigoItemExcluir: Integer);
   end;
 
 implementation
@@ -85,6 +86,19 @@ begin
   FCdsItensPedido := ACdsItensPedido;
   ConfigurarDataSetPedidoVenda;
   ConfigurarDataSetItemPedidoVenda;
+end;
+
+procedure TControllerPedidoVenda.ExcluirItemPedido(ACodigoItemExcluir: Integer);
+var
+  LPedidoVenda: TDtoPedidoVenda;
+begin
+  LPedidoVenda := GetDtoPedidoVenda;
+  try
+    FModelPedidoVenda.ExcluirItemPedido(LPedidoVenda, ACodigoItemExcluir);
+  finally
+    if Assigned(LPedidoVenda) then
+      LPedidoVenda.Free;
+  end;
 end;
 
 procedure TControllerPedidoVenda.ExcluirPedidoVenda;
@@ -193,7 +207,7 @@ begin
   begin
     FModelPedidoVenda.Itens
       .Add(
-        TItemPedidoVenda.Create
+        TModelItemPedidoVenda.Create
           .Codigo(FCdsItensPedido.FieldByName('Codigo').AsInteger)
           .NumeroPedido(FCdsItensPedido.FieldByName('NumeroPedido').AsInteger)
           .CodigoProduto(FCdsItensPedido.FieldByName('CodigoProduto').AsInteger)

@@ -34,7 +34,7 @@ object ViewCadastroBase: TViewCadastroBase
     Top = 27
     Width = 624
     Height = 414
-    ActivePage = TabSheetConsulta
+    ActivePage = TabSheetCadastro
     Align = alClient
     TabOrder = 0
     object TabSheetConsulta: TTabSheet

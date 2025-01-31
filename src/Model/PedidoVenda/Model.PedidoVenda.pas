@@ -35,6 +35,7 @@ type
     procedure Incluir(APedidoVenda: TDtoPedidoVenda);
     procedure Alterar(APedidoVenda: TDtoPedidoVenda);
     procedure ExcluirPedidoVenda(ANumeroPedido: Integer);
+    procedure ExcluirItemPedido(APedidoVenda: TDtoPedidoVenda; ACodigoItemExcluir: Integer);
 
     constructor Create(ARepository: IRepositoryPedidoVenda);
   end;
@@ -68,6 +69,12 @@ function TPedidoVenda.DataEmissao(AValue: TDate): IModelPedidoVenda;
 begin
   Result := Self;
   FDataEmissao := AValue;
+end;
+
+procedure TPedidoVenda.ExcluirItemPedido(APedidoVenda: TDtoPedidoVenda;
+  ACodigoItemExcluir: Integer);
+begin
+  FRepositoryPedidoVenda.ExcluirItemPedido(APedidoVenda, ACodigoItemExcluir);
 end;
 
 procedure TPedidoVenda.ExcluirPedidoVenda(ANumeroPedido: Integer);

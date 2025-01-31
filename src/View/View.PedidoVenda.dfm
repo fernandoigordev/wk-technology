@@ -7,6 +7,7 @@ inherited ViewPedidoVenda: TViewPedidoVenda
     StyleElements = [seFont, seClient, seBorder]
   end
   inherited PageControlCadastro: TPageControl
+    ActivePage = TabSheetCadastro
     inherited TabSheetConsulta: TTabSheet
       inherited Panel3: TPanel
         StyleElements = [seFont, seClient, seBorder]

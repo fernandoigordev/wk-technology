@@ -23,6 +23,7 @@ type
     procedure Incluir(APedidoVenda: TDtoPedidoVenda);
     procedure Alterar(APedidoVenda: TDtoPedidoVenda);
     procedure ExcluirPedidoVenda(ANumeroPedido: Integer);
+    procedure ExcluirItemPedido(APedidoVenda: TDtoPedidoVenda; ACodigoItemExcluir: Integer);
   end;
 
 implementation
@@ -31,7 +32,7 @@ uses
   Model.Conexao,
   Dto.ItemPedidoVenda,
   Repository.PedidoVendaItem.Interfaces,
-  Repository.PedidoVendaItem.MySql;
+  Repository.PedidoVendaItem.MySql, System.SysUtils;
 
 { TRepositoryPedidoVendaMySql }
 
@@ -65,6 +66,43 @@ begin
   finally
     LQuery.Free;
   end;
+end;
+
+procedure TRepositoryPedidoVendaMySql.ExcluirItemPedido(
+  APedidoVenda: TDtoPedidoVenda; ACodigoItemExcluir: Integer);
+var
+  LQuery: TFDQuery;
+  LItemPedidoVenda: TDtoItemPedidoVenda;
+begin
+  LQuery := TModelConexao.Instance.GetQuery;
+  try
+    for LItemPedidoVenda in APedidoVenda.Itens do
+    begin
+      if LItemPedidoVenda.Codigo = ACodigoItemExcluir then
+      begin
+        try
+          TModelConexao.Instance.Conexao.StartTransaction;
+
+          LQuery.SQL.Text := 'update pedido_venda set valor_total = (valor_total - ' + FloatToStr(LItemPedidoVenda.ValorTotal) + ') ' +
+                             ' where numero = ' + IntToStr(APedidoVenda.Numero);
+          LQuery.ExecSQL;
+
+          LQuery.SQL.Text := 'delete from pedido_venda_item where codigo = ' + IntToStr(LItemPedidoVenda.Codigo);
+          LQuery.ExecSQL;
+
+          TModelConexao.Instance.Conexao.Commit;
+
+          Exit;
+        except
+          TModelConexao.Instance.Conexao.Rollback;
+          raise;
+        end;
+      end;
+    end;
+  finally
+    LQuery.Free;
+  end
+
 end;
 
 procedure TRepositoryPedidoVendaMySql.ExcluirPedidoVenda(ANumeroPedido: Integer);

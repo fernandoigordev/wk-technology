@@ -26,6 +26,7 @@ type
     procedure Incluir(APedidoVenda: TDtoPedidoVenda);
     procedure Alterar(APedidoVenda: TDtoPedidoVenda);
     procedure ExcluirPedidoVenda(ANumeroPedido: Integer);
+    procedure ExcluirItemPedido(APedidoVenda: TDtoPedidoVenda; ACodigoItemExcluir: Integer);
   End;
 
 implementation
